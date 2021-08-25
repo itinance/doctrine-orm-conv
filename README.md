@@ -79,5 +79,50 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
+## Example Outout
+
+Class Header:
+
+```PHP
+ /* 
+ * @ORM\Table(
+ *     name="transaction",
+ *     indexes={
+ *         @ORM\Index(name="idx_state", columns={"state"}),
+ *         @ORM\Index(name="idx_txid", columns={"txid"}),
+ *         @ORM\Index(name="idx_created", columns={"created"}),
+ *         @ORM\Index(name="idx_broadcasted", columns={"broadcasted"}),
+ *         @ORM\Index(name="idx_finished", columns={"finished"}),
+ *         @ORM\Index(name="idx_attempts", columns={"attempts"}),
+ *     },
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="idx_hash", columns={"hash"}),
+ *     },
+ * )
+ * */
+```
+
+Columns / Proprties:
+
+```PHP
+    /** @ORM\Column( type="string", length=255, name="hash", nullable=false ) */
+    private string $hash ;
+
+    /** @ORM\Column( type="text", name="data", nullable=true ) */
+    private ?string $data ;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TransactionType")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
+     */
+    private TransactionType $type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Customer")
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=true)
+     */
+    private ?Customer $customer;
+```
+
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
 
