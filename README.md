@@ -7,6 +7,25 @@ doctrine-orm-conv
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+
+
+# Intro
+
+## The story:
+
+I had to convert a really big bunch of entities across many Symfony and Doctrine based projects from the `orm.yml`-Format into the `@Annotations` format and looked for an approach how to automate. Long story short: there was no proper way instead of migrating everything by myself. 
+
+Since the manual migration was very time-consuming and also very error-prone, I decided to automate this.
+
+** DON'T JUDGE ME I AM FAMOUS **
+
+This tool is just a one-shot-helper-tool. *No clean code*, *no tests*, just a single tool for *fire-and-forget*. 
+I decided to publish the tool in case someone else also has the need for it.
+
+*Fun fact: although this tool helps to convert PHP code and was written for PHP projects, I ended up writing it with TypeScript as a NodeJS CLI. 
+The reason is quite funny: I started with PHP, but it was too time-consuming to find a suitable way to parse YML files without having to install any PECL extensions and without needing big frameworks that come with everything for that. NodeJS was the leaner and faster option here (although I am not a Node developer, as you might notice when looking at the code).*
+
+
 # Usage
 <!-- usage -->
 ```sh-session
