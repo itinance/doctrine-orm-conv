@@ -11,7 +11,7 @@ export default class Hello extends Command {
   static description = 'describe the command here'
 
   static examples = [
-    `$ slicer hello
+    `$ doctrine-orm-conv hello
 hello world from ./src/hello.ts!
 `,
   ]

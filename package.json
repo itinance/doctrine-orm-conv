@@ -1,11 +1,11 @@
 {
-  "name": "slicer",
+  "name": "doctrine-orm-conv",
   "version": "0.0.0",
   "author": "Hagen Hübel @itinance",
   "bin": {
-    "slicer": "./bin/run"
+    "doctrine-orm-conv": "./bin/run"
   },
-  "bugs": "https://github.com/itinance/slicer/issues",
+  "bugs": "https://github.com/itinance/doctrine-orm-conv/issues",
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
@@ -46,7 +46,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/itinance/slicer",
+  "homepage": "https://github.com/itinance/doctrine-orm-conv",
   "keywords": [
     "oclif"
   ],
@@ -54,12 +54,12 @@
   "main": "lib/index.js",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "slicer",
+    "bin": "doctrine-orm-conv",
     "plugins": [
       "@oclif/plugin-help"
     ]
   },
-  "repository": "itinance/slicer",
+  "repository": "itinance/doctrine-orm-conv",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
