@@ -32,8 +32,6 @@ The reason is quite funny: I started with PHP, but it was too time-consuming to 
 $ doctrine-orm-conv install -g doctrine-orm-conv
 $ doctrine-orm-conv COMMAND
 running command...
-$ doctrine-orm-conv (-v|--version|version)
-doctrine-orm-conv/0.0.0 darwin-x64 node-v15.5.0
 $ doctrine-orm-conv --help [COMMAND]
 USAGE
   $ doctrine-orm-conv COMMAND
