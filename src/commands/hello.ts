@@ -116,7 +116,7 @@ hello world from ./src/hello.ts!
 
     }
 
-    if(typeof(entity?.manyToOne === 'object')) {
+    if(entity?.manyToOne?.length > 0) {
       this.handleRelations("ManyToOne", entity?.manyToOne);
     }
     if(entity?.oneToMany?.length > 0) {
