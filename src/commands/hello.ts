@@ -116,16 +116,16 @@ hello world from ./src/hello.ts!
 
     }
 
-    if(entity?.manyToOne?.length > 0) {
+    if(typeof entity?.manyToOne === 'object') {
       this.handleRelations("ManyToOne", entity?.manyToOne);
     }
-    if(entity?.oneToMany?.length > 0) {
+    if(typeof entity?.oneToMany === 'object') {
       this.handleRelations("OneToMany", entity?.oneToMany);
     }
-    if(entity?.oneToOne?.length > 0) {
+    if(typeof entity?.oneToOne === 'object') {
       this.handleRelations("OneToOne", entity?.oneToOne);
     }
-    if(entity?.manyToMany?.length > 0) {
+    if(typeof entity?.manyToMany === 'object') {
       this.handleRelations("ManyToMany", entity?.manyToMany);
     }
 
