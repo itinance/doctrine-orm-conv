@@ -1,12 +1,10 @@
-slicer
+doctrine-orm-conv
 ======
 
-
-
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/slicer.svg)](https://npmjs.org/package/slicer)
-[![Downloads/week](https://img.shields.io/npm/dw/slicer.svg)](https://npmjs.org/package/slicer)
-[![License](https://img.shields.io/npm/l/slicer.svg)](https://github.com/itinance/slicer/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/doctrine-orm-conv.svg)](https://npmjs.org/package/doctrine-orm-conv)
+[![Downloads/week](https://img.shields.io/npm/dw/doctrine-orm-conv.svg)](https://npmjs.org/package/doctrine-orm-conv)
+[![License](https://img.shields.io/npm/l/doctrine-orm-conv.svg)](https://github.com/itinance/doctrine-orm-conv/blob/master/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
@@ -15,50 +13,48 @@ slicer
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g slicer
-$ slicer COMMAND
+$ doctrine-orm-conv install -g doctrine-orm-conv
+$ doctrine-orm-conv COMMAND
 running command...
-$ slicer (-v|--version|version)
-slicer/0.0.0 darwin-x64 node-v15.5.0
-$ slicer --help [COMMAND]
+$ doctrine-orm-conv (-v|--version|version)
+doctrine-orm-conv/0.0.0 darwin-x64 node-v15.5.0
+$ doctrine-orm-conv --help [COMMAND]
 USAGE
-  $ slicer COMMAND
+  $ doctrine-orm-conv COMMAND
 ...
 ```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`slicer hello [FILE]`](#slicer-hello-file)
-* [`slicer help [COMMAND]`](#slicer-help-command)
-* [`slicer prepare [FILE]`](#slicer-prepare-file)
+* [`doctrine-orm-conv hello [FILE]`](#doctrine-orm-conver-hello-file)
+* [`doctrine-orm-conv help [COMMAND]`](#doctrine-orm-convicer-help-command)
 
-## `slicer hello [FILE]`
+## `doctrine-orm-conv hello [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ slicer hello [FILE]
+  $ doctrine-orm-conv hello [FILE]
 
 OPTIONS
-  -f, --force
+  -c, --columns    include columns
   -h, --help       show CLI help
   -n, --name=name  name to print
 
 EXAMPLE
-  $ slicer hello
-  hello world from ./src/hello.ts!
+  $ doctrine-orm-conv hello ./doctrine/customer.orm.yml
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/itinance/slicer/blob/v0.0.0/src/commands/hello.ts)_
+_See code: [src/commands/hello.ts](https://github.com/itinance/doctrine-orm-conv/blob/v0.0.0/src/commands/hello.ts)_
 
-## `slicer help [COMMAND]`
+## `doctrine-orm-conv help [COMMAND]`
 
-display help for slicer
+display help for doctrine-orm-conv
 
 ```
 USAGE
-  $ slicer help [COMMAND]
+  $ doctrine-orm-conv help [COMMAND]
 
 ARGUMENTS
   COMMAND  command to show help for
@@ -69,19 +65,3 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
 
-## `slicer prepare [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ slicer prepare [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-```
-
-_See code: [src/commands/prepare.ts](https://github.com/itinance/slicer/blob/v0.0.0/src/commands/prepare.ts)_
-<!-- commandsstop -->
