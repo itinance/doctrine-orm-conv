@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "author": "Hagen Hübel @itinance",
   "bin": {
-    "doctrine-orm-conv": "./bin/run"
+    "doctrine-orm-conv": "bin/run"
   },
-  "bugs": "https://github.com/itinance/doctrine-orm-conv/issues",
+  "bugs": {
+    "url": "https://github.com/itinance/doctrine-orm-conv/issues"
+  },
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
@@ -32,7 +34,6 @@
     "eslint-config-oclif-typescript": "^0.1",
     "eslint-config-prettier": "^8.3.0",
     "globby": "^10",
-    "hardhat": "^2.3.0",
     "mocha": "^5",
     "nyc": "^14",
     "ts-node": "^8"
@@ -59,7 +60,10 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "itinance/doctrine-orm-conv",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itinance/doctrine-orm-conv.git"
+  },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
@@ -67,5 +71,9 @@
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
-  "types": "lib/index.d.ts"
+  "types": "lib/index.d.ts",
+  "description": "doctrine-orm-conv ======",
+  "directories": {
+    "test": "test"
+  }
 }
