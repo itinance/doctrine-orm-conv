@@ -24,6 +24,45 @@ hello world from ./src/hello.ts!
 
   static args = [{name: 'file'}]
 
+  buildPropertyDeclaration(type: string, item: Object): {string, string} {
+    let defaultValue = null;
+
+    switch(type) {
+      case 'text':
+        type = 'string';
+        if(item.nullable === false || item.nullable === 'false') {
+          defaultValue = '""';
+        }
+        break;
+      case 'datetime':
+      case 'datetimetz':
+        type = 'DateTime';
+        break;
+
+      case 'float':
+        type = 'float';
+        if(item.nullable === false || item.nullable === 'false') {
+          defaultValue = item.default ? item.default : '.0';
+        }
+        break;
+          
+      case 'integer':
+        type = 'int';
+        if(item.nullable === false || item.nullable === 'false') {
+          defaultValue = item.default ? item.default : '0';
+        }
+        break;
+      case 'boolean':
+        type = 'bool';
+        if(item.nullable === false || item.nullable === 'false') {
+          defaultValue = item.default ? item.default : 'false';
+        }
+        break;
+      
+      }
+    return {type, defaultValue}
+  }
+
   handleEntityProperties(entity: any, name: string) {
     
     for (const [name, item] of Object.entries(entity?.fields)) {
@@ -60,83 +99,67 @@ hello world from ./src/hello.ts!
       // __(1, ` * @ORM\\Column( ${attributes.join(', ')} )`);
       __(1, `/** @ORM\\Column( ${attributes.join(', ')} ) */`);
       //__(1, " */");
-      const propertyName = name;
-      let defaultValue = null;
 
-      switch(type) {
-        case 'text':
-          type = 'string';
-          if(item.nullable === false || item.nullable === 'false') {
-            defaultValue = '""';
-          }
-          break;
-        case 'datetime':
-        case 'datetimetz':
-          type = 'DateTime';
-          break;
+      const {type: newType, defaultValue} = this.buildPropertyDeclaration(type, item)
 
-        case 'float':
-          type = 'float';
-          if(item.nullable === false || item.nullable === 'false') {
-            defaultValue = item.default ? item.default : '.0';
-          }
-          break;
-            
-        case 'integer':
-          type = 'int';
-          if(item.nullable === false || item.nullable === 'false') {
-            defaultValue = item.default ? item.default : '0';
-          }
-          break;
-        case 'boolean':
-          type = 'bool';
-          if(item.nullable === false || item.nullable === 'false') {
-            defaultValue = item.default ? item.default : 'false';
-          }
-          break;
-        
-        }
-      
-      __(1, `private ${nullable ? '?' : ''}${type} $${propertyName} ${defaultValue ? "= " + defaultValue : '' };`);
+      __(1, `private ${nullable ? '?' : ''}${newType} $${name} ${defaultValue ? "= " + defaultValue : '' };`);
       __(1, '');
 
-
-      if(typeof(entity.manyToOne === 'object')) {
-        this.handleRelations(entity?.manyToOne);
-      }
-      /*if(count(entity?.oneToMany) > 0) {
-        this.handleRelations(entity?.oneToMany);
-      }*/
-
     }
+
+    if(typeof(entity?.manyToOne === 'object')) {
+      this.handleRelations("ManyToOne", entity?.manyToOne);
+    }
+    if(entity?.oneToMany?.length > 0) {
+      this.handleRelations("OneToMany", entity?.oneToMany);
+    }
+    if(entity?.oneToOne?.length > 0) {
+      this.handleRelations("OneToOne", entity?.oneToOne);
+    }
+    if(entity?.manyToMany?.length > 0) {
+      this.handleRelations("ManyToMany", entity?.manyToMany);
+    }
+
   }
 
-  handleRelations(fields: Array) {
+  handleRelations(relation: string, fields: Array) {
     for (const [name, item] of Object.entries(fields)) {
-      let {targetEntity, joinColumn} = item;
-      let nullable = null, attributes = [];
+      let {targetEntity, joinColumn, mappedBy, inversedBy} = item;
+      let nullable = null, attributes = [], relAttributes=[];
 
-      if(targetEntity[0] !== '\\') targetEntity = '\\' + targetEntity;
-      console.log(1, joinColumn)
+      //if(targetEntity[0] !== '\\') targetEntity = '\\' + targetEntity;
+      //console.log(1, joinColumn)
+
+      if(typeof inversedBy !== 'undefined') {
+        relAttributes.push(`inversedBy="${inversedBy}"`)
+      }
+      if(typeof mappedBy !== 'undefined') {
+        relAttributes.push(`mappedBy="${mappedBy}"`)
+      }
 
       if(typeof joinColumn.nullable !== 'undefined') {
         attributes.push('nullable=' + joinColumn.nullable)
-        if(item.nullable === 'true' || item.nullable === true) {
+        if(joinColumn.nullable === 'true' || joinColumn.nullable === true) {
           nullable = true;
         }
       }
 
+
+      const relAttributesSep = relAttributes.length > 0 ? ', ' : '';
+      const AttributesSep = attributes.length > 0 ? ', ' : '';
+
       __(1, "/**");
-      __(1, ` * @ORM\\ManyToOne(targetEntity="${targetEntity}")`)
+      __(1, ` * @ORM\\${relation}(targetEntity="${targetEntity}"${relAttributesSep}${relAttributes.join(', ')})`)
       //__(1, `/** @ORM\\Column( ${attributes.join(', ')} ) */`);
-      __(1, ` * @ORM\\JoinColumn(name="${joinColumn.name}", referencedColumnName="${joinColumn.referencedColumnName}", ${attributes.join(', ')})`);
+      __(1, ` * @ORM\\JoinColumn(name="${joinColumn.name}", referencedColumnName="${joinColumn.referencedColumnName}"${AttributesSep}${attributes.join(', ')})`);
       __(1, " */");
 
-    }
- 
+      const {type: newType, defaultValue} = this.buildPropertyDeclaration(targetEntity, joinColumn)
 
+      __(1, `private ${nullable ? '?' : ''}${newType} $${name}${defaultValue ? " = " + defaultValue : '' };`);
+      __(1, "");
+    } 
   }
-
 
   handleEntity(entity: any, name: string) {
     

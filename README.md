@@ -2,9 +2,6 @@ doctrine-orm-conv
 ======
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/doctrine-orm-conv.svg)](https://npmjs.org/package/doctrine-orm-conv)
-[![Downloads/week](https://img.shields.io/npm/dw/doctrine-orm-conv.svg)](https://npmjs.org/package/doctrine-orm-conv)
-[![License](https://img.shields.io/npm/l/doctrine-orm-conv.svg)](https://github.com/itinance/doctrine-orm-conv/blob/master/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
