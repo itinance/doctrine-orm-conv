@@ -172,6 +172,8 @@ hello world from ./src/hello.ts!
 
   handleEntity(entity: any, name: string) {
     
+    console.log("/**")
+    _(0, "@ORM\\Entity()")
     _(0, "@ORM\\Table(");
     _(1, `name=\"${entity.table}\",`);
 
@@ -198,6 +200,7 @@ hello world from ./src/hello.ts!
     }
 
     _(0, ")");
+    console.log(" */")
   }
 
   async run() {
