@@ -64,7 +64,16 @@ hello world from ./src/hello.ts!
   }
 
   handleEntityProperties(entity: any, name: string) {
-    
+
+    __(1, '/**');
+    __(1, ' * @ORM\Id');
+    __(1, ' * @ORM\GeneratedValue');
+    __(1, ' * @ORM\Column(type="integer", nullable=false)');
+    __(1, '*/');
+    __(1, 'protected int $id;')
+    __(1, '');
+    	
+	  
     for (const [name, item] of Object.entries(entity?.fields)) {
       //console.log(name, item);
 
@@ -102,7 +111,7 @@ hello world from ./src/hello.ts!
 
       const {type: newType, defaultValue} = this.buildPropertyDeclaration(type, item)
 
-      __(1, `private ${nullable ? '?' : ''}${newType} $${name} ${defaultValue ? "= " + defaultValue : '' };`);
+      __(1, `protected ${nullable ? '?' : ''}${newType} $${name} ${defaultValue ? "= " + defaultValue : '' };`);
       __(1, '');
 
     }
@@ -156,7 +165,7 @@ hello world from ./src/hello.ts!
 
       const {type: newType, defaultValue} = this.buildPropertyDeclaration(targetEntity, joinColumn)
 
-      __(1, `private ${nullable ? '?' : ''}${newType} $${name}${defaultValue ? " = " + defaultValue : '' };`);
+      __(1, `protected ${nullable ? '?' : ''}${newType} $${name}${defaultValue ? " = " + defaultValue : '' };`);
       __(1, "");
     } 
   }
