@@ -1,6 +1,6 @@
 import {Command, flags} from '@oclif/command'
 import { count } from 'console'
-import { createNoSubstitutionTemplateLiteral, isTemplateExpression } from 'typescript'
+import { collapseTextChangeRangesAcrossMultipleVersions, createNoSubstitutionTemplateLiteral, isTemplateExpression } from 'typescript'
 
 const fs = require('fs')
 const YAML = require('yaml')
@@ -20,6 +20,11 @@ hello world from ./src/hello.ts!
     help: flags.help({char: 'h'}),
 
     withColumns: flags.boolean({char: 'c'}),
+
+    replacements: flags.string({
+      char: 'r',
+      default: '',
+    }),
   }
 
   static args = [{name: 'file'}]
@@ -63,7 +68,7 @@ hello world from ./src/hello.ts!
     return {type, defaultValue}
   }
 
-  handleEntityProperties(entity: any, name: string) {
+  handleEntityProperties(entity: any, name: string, replacements: Array<string>) {
 
     __(1, '/**');
     __(1, ' * @ORM\Id');
@@ -117,27 +122,37 @@ hello world from ./src/hello.ts!
     }
 
     if(typeof entity?.manyToOne === 'object') {
-      this.handleRelations("ManyToOne", entity?.manyToOne);
+      this.handleRelations("ManyToOne", entity?.manyToOne, replacements);
     }
     if(typeof entity?.oneToMany === 'object') {
-      this.handleRelations("OneToMany", entity?.oneToMany);
+      this.handleRelations("OneToMany", entity?.oneToMany, replacements);
     }
     if(typeof entity?.oneToOne === 'object') {
-      this.handleRelations("OneToOne", entity?.oneToOne);
+      this.handleRelations("OneToOne", entity?.oneToOne, replacements);
     }
     if(typeof entity?.manyToMany === 'object') {
-      this.handleRelations("ManyToMany", entity?.manyToMany);
+      this.handleRelations("ManyToMany", entity?.manyToMany, replacements);
     }
 
   }
 
-  handleRelations(relation: string, fields: Array) {
+  replaceItem(targetEntity: string, replacements): string {
+    if(typeof replacements[targetEntity] === 'string') {
+      return replacements[targetEntity];
+    }
+    return targetEntity;
+  }
+
+  handleRelations(relation: string, fields: Array, replacements: Array<string>) {
     for (const [name, item] of Object.entries(fields)) {
       let {targetEntity, joinColumn, mappedBy, inversedBy} = item;
       let nullable = null, attributes = [], relAttributes=[];
 
       //if(targetEntity[0] !== '\\') targetEntity = '\\' + targetEntity;
       //console.log(1, joinColumn)
+
+      targetEntity = this.replaceItem(targetEntity, replacements)
+
 
       if(typeof inversedBy !== 'undefined') {
         relAttributes.push(`inversedBy="${inversedBy}"`)
@@ -170,7 +185,7 @@ hello world from ./src/hello.ts!
     } 
   }
 
-  handleEntity(entity: any, name: string) {
+  handleEntity(entity: any, name: string, replacements: Array<string>) {
     
     console.log("/**")
     _(0, "@ORM\\Entity()")
@@ -207,6 +222,23 @@ hello world from ./src/hello.ts!
     const {args, flags} = this.parse(Hello)
 
     const withColumns = !! flags.withColumns
+    const replacements = [];
+
+    if(typeof flags.replacements === 'string') {
+      const replacementsDefFile = fs.readFileSync(flags.replacements, 'utf8')
+      console.log(replacementsDefFile)
+
+
+      replacementsDefFile.split("\n").map( r => {
+        const [source, dest] = r.split("=")
+        if(typeof source === 'string' && typeof dest === 'string') {
+          replacements[source] = dest;
+        }
+      })
+
+      console.log(replacements);
+    }
+
 
     if (args.file) {
 
@@ -217,9 +249,9 @@ hello world from ./src/hello.ts!
       const v = data[k[0]];
       if(typeof v.type === 'string' && v.type === 'entity') {
         if(withColumns) {
-          this.handleEntityProperties(v, k[0]);
+          this.handleEntityProperties(v, k[0], replacements);
         } else {
-          this.handleEntity(v, k[0]);
+          this.handleEntity(v, k[0], replacements);
         }
       }
       
