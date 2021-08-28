@@ -99,8 +99,8 @@ hello world from ./src/hello.ts!
         attributes.push( `name="${item.column}"` );
       }
       
-      if(typeof item.default !== 'undefined') {
-        attributes.push( `default="${item.default}"` );
+      if(typeof item.default !== 'undefined' && item.default !== 'null') {
+        attributes.push( `options={"default": "${item.default}"}` );
       }
       if(typeof item.nullable !== 'undefined') {
         attributes.push('nullable=' + item.nullable)
