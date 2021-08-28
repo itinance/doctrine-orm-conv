@@ -51,6 +51,7 @@ hello world from ./src/hello.ts!
         }
         break;
           
+      case 'bigint':
       case 'integer':
         type = 'int';
         if(item.nullable === false || item.nullable === 'false') {
@@ -71,9 +72,9 @@ hello world from ./src/hello.ts!
   handleEntityProperties(entity: any, name: string, replacements: Array<string>) {
 
     __(1, '/**');
-    __(1, ' * @ORM\Id');
-    __(1, ' * @ORM\GeneratedValue');
-    __(1, ' * @ORM\Column(type="integer", nullable=false)');
+    __(1, ' * @ORM\\Id');
+    __(1, ' * @ORM\\GeneratedValue');
+    __(1, ' * @ORM\\Column(type="integer", nullable=false)');
     __(1, '*/');
     __(1, 'protected int $id;')
     __(1, '');
