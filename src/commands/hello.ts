@@ -1,6 +1,6 @@
 import {Command, flags} from '@oclif/command'
 import { count } from 'console'
-import { collapseTextChangeRangesAcrossMultipleVersions, createNoSubstitutionTemplateLiteral, isTemplateExpression } from 'typescript'
+import { collapseTextChangeRangesAcrossMultipleVersions, createNoSubstitutionTemplateLiteral, createUnparsedSourceFile, isTemplateExpression } from 'typescript'
 
 const fs = require('fs')
 const YAML = require('yaml')
@@ -35,7 +35,7 @@ hello world from ./src/hello.ts!
     switch(type) {
       case 'text':
         type = 'string';
-        if(item.nullable === false || item.nullable === 'false') {
+        if(typeof item.nullable !== 'undefined' && (item.nullable === false || item.nullable === 'false')) {
           defaultValue = '""';
         }
         break;
@@ -46,7 +46,7 @@ hello world from ./src/hello.ts!
 
       case 'float':
         type = 'float';
-        if(item.nullable === false || item.nullable === 'false') {
+        if(typeof item.nullable !== 'undefined' && (item.nullable === false || item.nullable === 'false')) {
           defaultValue = item.default ? item.default : '.0';
         }
         break;
@@ -54,13 +54,13 @@ hello world from ./src/hello.ts!
       case 'bigint':
       case 'integer':
         type = 'int';
-        if(item.nullable === false || item.nullable === 'false') {
+        if(typeof item.nullable !== 'undefined' && (item.nullable === false || item.nullable === 'false')) {
           defaultValue = item.default ? item.default : '0';
         }
         break;
       case 'boolean':
         type = 'bool';
-        if(item.nullable === false || item.nullable === 'false') {
+        if(typeof item.nullable !== 'undefined' && (item.nullable === false || item.nullable === 'false')) {
           defaultValue = item.default ? item.default : 'false';
         }
         break;
@@ -154,7 +154,6 @@ hello world from ./src/hello.ts!
 
       targetEntity = this.replaceItem(targetEntity, replacements)
 
-
       if(typeof inversedBy !== 'undefined') {
         relAttributes.push(`inversedBy="${inversedBy}"`)
       }
@@ -162,21 +161,25 @@ hello world from ./src/hello.ts!
         relAttributes.push(`mappedBy="${mappedBy}"`)
       }
 
-      if(typeof joinColumn.nullable !== 'undefined') {
+      if(typeof joinColumn !== 'undefined' && typeof joinColumn.nullable !== 'undefined') {
         attributes.push('nullable=' + joinColumn.nullable)
         if(joinColumn.nullable === 'true' || joinColumn.nullable === true) {
           nullable = true;
         }
       }
 
-
       const relAttributesSep = relAttributes.length > 0 ? ', ' : '';
       const AttributesSep = attributes.length > 0 ? ', ' : '';
 
       __(1, "/**");
       __(1, ` * @ORM\\${relation}(targetEntity="${targetEntity}"${relAttributesSep}${relAttributes.join(', ')})`)
-      //__(1, `/** @ORM\\Column( ${attributes.join(', ')} ) */`);
-      __(1, ` * @ORM\\JoinColumn(name="${joinColumn.name}", referencedColumnName="${joinColumn.referencedColumnName}"${AttributesSep}${attributes.join(', ')})`);
+      
+      if(typeof joinColumn !== 'undefined') {
+        __(1, ` * @ORM\\JoinColumn(name="${joinColumn.name}", referencedColumnName="${joinColumn.referencedColumnName}"${AttributesSep}${attributes.join(', ')})`);
+      } else {
+        __(1, ` * @ORM\\JoinTable(name="${name}")`)
+      }
+
       __(1, " */");
 
       const {type: newType, defaultValue} = this.buildPropertyDeclaration(targetEntity, joinColumn)
@@ -193,9 +196,9 @@ hello world from ./src/hello.ts!
     _(0, "@ORM\\Table(");
     _(1, `name=\"${entity.table}\",`);
 
-    // Indixes
+    // Indexes
 
-    if(typeof entity.indexes !== 'undefined') {
+    if(typeof entity.indexes !== 'undefined' && entity.indexes !== null) {
       _(1, `indexes={`);
       for (const [name, item] of Object.entries(entity.indexes)) {
         const c = item.columns.map(c => `"${c}"`).join(', ');
@@ -205,7 +208,7 @@ hello world from ./src/hello.ts!
     }
 
     // unique Constraints
-    if(typeof entity.uniqueConstraints !== 'undefined' ) {
+    if(typeof entity.uniqueConstraints !== 'undefined' && entity.uniqueConstraints !== null ) {
       _(1, `uniqueConstraints={`);
       for (const [name, item] of Object.entries(entity.uniqueConstraints)) {
         const c = item.columns.map(c => `"${c}"`).join(', ');
@@ -225,10 +228,8 @@ hello world from ./src/hello.ts!
     const withColumns = !! flags.withColumns
     const replacements = [];
 
-    if(typeof flags.replacements === 'string') {
+    if(typeof flags.replacements === 'string' && flags.replacements.length > 0) {
       const replacementsDefFile = fs.readFileSync(flags.replacements, 'utf8')
-      console.log(replacementsDefFile)
-
 
       replacementsDefFile.split("\n").map( r => {
         const [source, dest] = r.split("=")
@@ -237,7 +238,6 @@ hello world from ./src/hello.ts!
         }
       })
 
-      console.log(replacements);
     }
 
 
